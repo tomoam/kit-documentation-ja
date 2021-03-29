@@ -1,0 +1,30 @@
+{
+	"title": "SvelteKit • Svelteアプリを最速で構築する方法",
+	"tagline": "Svelteアプリを最速で構築する方法",
+	"blurb": {
+		"one": {
+			"title": "Big ideas, small size",
+			"description": "SvelteKitはSvelteのアプリケーションフレームワークです — 小さいフットプリントでお望みのアプリを構築します",
+			"lean-more": "もっと詳しく"
+		},
+		"two": {
+			"title": "Best of both worlds",
+			"description": "サーバーレンダリングアプリのSEOとプログレッシブエンハンスメント、SPAの洗練されたナビゲーション",
+			"lean-more": "もっと詳しく"
+		},
+		"three": {
+			"title": "Build fast",
+			"description": "Viteによる世界最高水準のデベロッパーエクスペリエンス — 変更を即時に確認できます",
+			"lean-more": "もっと詳しく"
+		},
+		"what": {
+			"p1": "SvelteKitは素晴らしい開発体験と柔軟なファイルシステムベースのルーティングを備えた、あらゆる規模のWebアプリケーションを構築するためのフレームワークです。",
+			"p2": "シングルページアプリとは異なり、SvelteKitは、SEO、プログレッシブエンハンスメント、初期ロードに妥協していません — また従来のサーバーレンダリングアプリとも異なり、ナビゲーションはアプリのように瞬時に行われます。",
+			"p3-link": "このブログポスト",
+			"p3-text": "から詳しく知ることができます。"
+		},
+		"how": {
+			"cta": "SvelteKitを学ぶ"
+		}
+	}
+}
