@@ -3,19 +3,20 @@
 	"tagline": "Svelteアプリを最速で構築する方法",
 	"blurb": {
 		"one": {
-			"title": "Big ideas, small size",
+			"link": "https://svelte.dev",
+			"title": "大きなアイデア, 小さいサイズ",
 			"description": "SvelteKitはSvelteのアプリケーションフレームワークです — 小さいフットプリントでお望みのアプリを構築します",
-			"lean-more": "もっと詳しく"
+			"more": "もっと詳しく"
 		},
 		"two": {
-			"title": "Best of both worlds",
+			"title": "両方の長所を備える",
 			"description": "サーバーレンダリングアプリのSEOとプログレッシブエンハンスメント、SPAの洗練されたナビゲーション",
-			"lean-more": "もっと詳しく"
+			"more": "もっと詳しく"
 		},
 		"three": {
-			"title": "Build fast",
+			"title": "超高速なビルド",
 			"description": "Viteによる世界最高水準のデベロッパーエクスペリエンス — 変更を即時に確認できます",
-			"lean-more": "もっと詳しく"
+			"more": "もっと詳しく"
 		},
 		"what": {
 			"p1": "SvelteKitは素晴らしい開発体験と柔軟なファイルシステムベースのルーティングを備えた、あらゆる規模のWebアプリケーションを構築するためのフレームワークです。",
