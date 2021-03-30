@@ -2,26 +2,31 @@
 title: Introduction
 ---
 
-### Before we begin
+### 始める前に(Before we begin)
 
-> SvelteKit is in early development, and some things may change before we hit version 1.0. This document is a work-in-progress. If you get stuck, reach out for help in the [Discord chatroom](https://svelte.dev/chat).
+> SvelteKitは初期の開発段階で、バージョン1.0になるまでに様々なところが変更される可能性があります。このドキュメントもまだ進行中です。もし行き詰まった場合は、[Discordチャットルーム](https://svelte.dev/chat)で助けを求めてください。
 >
-> See the [migration guides](migrating) for help upgrading from Sapper.
+> Sapperからのアップグレードについては [migrationガイド](migrating) をご参照ください。
 
-### What is SvelteKit?
+### SvelteKitとは?(What is SvelteKit?)
 
-SvelteKit is a framework for building extremely high-performance web apps. You're looking at one right now! There are two basic concepts:
+SvelteKitは非常にハイパフォーマンスなWebアプリを構築するためのフレームワークです。今見ているこのサイトもそうです! 基本的なコンセプトは2つあります:
 
-* Each page of your app is a [Svelte](https://svelte.dev) component
-* You create pages by adding files to the `src/routes` directory of your project. These will be server-rendered so that a user's first visit to your app is as fast as possible, then a client-side app takes over
+* アプリの各ページは [Svelte](https://svelte.dev) コンポーネントです
+* プロジェクトの `src/routes` ディレクトリにファイルを追加してページを作成します。これらはユーザーが初めてアクセスしたときにできるだけ速くアクセスできるようサーバーでレンダリングされ、その後クライアントサイドのアプリに引き継がれます
 
-Building an app with all the modern best practices — code-splitting, offline support, server-rendered views with client-side hydration — is fiendishly complicated. SvelteKit does all the boring stuff for you so that you can get on with the creative part.
+最新のベストプラクティス — コード分割、オフラインサポート、クライアントサイドハイドレーションとサーバーサイドレンダリングビューなど — を全て用いてアプリを構築するのは気が遠くなるほど複雑です。SvelteKitが退屈な作業を全て行ってくれるので、あなたはクリエイティブな作業に専念することができます。
 
-You don't need to know Svelte to understand the rest of this guide, but it will help. In short, it's a UI framework that compiles your components to highly optimized vanilla JavaScript. Read the [introductory blog post](https://svelte.dev/blog/svelte-3-rethinking-reactivity) and the [tutorial](https://svelte.dev/tutorial) to learn more.
+このガイドの残りの部分を理解するのにSvelteを知っている必要はありませんが、助けにはなります。一言で言えば、Svelteはコンポーネントを高度に最適化されたvanilla JavaScriptにコンパイルしてくれるUIフレームワークです。詳しくは [紹介ブログ記事](https://svelte.dev/blog/svelte-3-rethinking-reactivity) や [チュートリアル](https://svelte.dev/tutorial) をお読みください。
+
+> 日本語翻訳版 追記 :  
+> 上記のブログポストとチュートリアルは英語版です。日本語翻訳版はこちらからどうぞ。  
+> - [紹介ブログ記事](https://sveltejp.dev/blog/svelte-3-rethinking-reactivity)
+> - [チュートリアル](https://sveltejp.dev/tutorial)
 
 ### Getting started
 
-The easiest way to start building a SvelteKit app is to run `npm init`:
+SvelteKitアプリの構築を始める最も簡単な方法は `npm init` を実行することです:
 
 ```bash
 mkdir my-app
@@ -31,4 +36,4 @@ npm install
 npm run dev
 ```
 
-This will scaffold a new project in the `my-app` directory, install its dependencies, and start a server on [localhost:3000](http://localhost:3000). Try editing the files to get a feel for how everything works – you may not need to bother reading the rest of this guide!
+これを実行すると `my-app` ディレクトリに新しいプロジェクトが生成され、依存関係がインストールされ、サーバーが [localhost:3000](http://localhost:3000) で開始されます。ファイルを編集して、全てがどのように機能するか感触を確かめてください – もうこのガイドの残りをわざわざ読む必要はないかもしれません!
