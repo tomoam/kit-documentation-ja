@@ -2,7 +2,7 @@
 title: Routing
 ---
 
-At the heart of SvelteKit is a *filesystem-based router*. This means that the structure of your application is defined by the structure of your codebase — specifically, the contents of `src/routes`.
+At the heart of SvelteKit is a _filesystem-based router_. This means that the structure of your application is defined by the structure of your codebase — specifically, the contents of `src/routes`.
 
 > You can change this to a different directory by editing the [project config](#configuration).
 
@@ -39,10 +39,10 @@ Dynamic parameters are encoded using `[brackets]`. For example, a blog post migh
 
 ### Endpoints
 
-Endpoints are modules written in `.js` (or `.ts`) files that export functions corresponding to HTTP methods. Each function receives HTTP `request` and `context` objects as arguments. For example our hypothetical blog page, `/blog/cool-article`, might request data from `/blog/cool-article.json`, which could be represented by a `src/routes/blog/[slug].json.js` endpoint:
+Endpoints are modules written in `.js` (or `.ts`) files that export functions corresponding to HTTP methods. For example our hypothetical blog page, `/blog/cool-article`, might request data from `/blog/cool-article.json`, which could be represented by a `src/routes/blog/[slug].json.js` endpoint:
 
 ```ts
-type Request = {
+type Request<Context = any> = {
 	host: string;
 	method: 'GET';
 	headers: Record<string, string>;
@@ -50,6 +50,7 @@ type Request = {
 	params: Record<string, string | string[]>;
 	query: URLSearchParams;
 	body: string | Buffer | ReadOnlyFormData;
+	context: Context; // see getContext, below
 };
 
 type Response = {
@@ -57,50 +58,45 @@ type Response = {
 	headers?: Record<string, string>;
 	body?: any;
 };
+
+type RequestHandler<Context = any> = {
+	(request: Request<Context>) => Response | Promise<Response>;
+}
 ```
 
 ```js
 import db from '$lib/database';
 
 /**
- * @param {import('@sveltejs/kit').Request} request
- * @param {any} context
- * @returns {import('@sveltejs/kit').Response}
+ * @type {import('@sveltejs/kit').RequestHandler}
  */
-export async function get(request, context) {
+export async function get({ params }) {
 	// the `slug` parameter is available because this file
 	// is called [slug].json.js
-	const { slug } = request.params;
+	const { slug } = params;
 
 	const article = await db.get(slug);
 
-	if (article !== null) {
+	if (article) {
 		return {
 			body: {
 				article
-			}
-		};
-	} else {
-		return {
-			status: 404,
-			body: {
-				error: 'Not found'
 			}
 		};
 	}
 }
 ```
 
-Because this module only runs on the server (or when you build your site, if [prerendering](#prerendering)), you can freely access things like databases. (Don't worry about `$lib`, we'll get to that [later](#$lib).)
+> Returning nothing is equivalent to an explicit 404 response.
 
-The second argument, `context`, is something you define during [setup](#setup), if necessary.
+Because this module only runs on the server (or when you build your site, if [prerendering](#prerendering)), you can freely access things like databases. (Don't worry about `$lib`, we'll get to that [later](#$lib).)
 
 The job of this function is to return a `{status, headers, body}` object representing the response. If the returned `body` is an object, and no `content-type` header is returned, it will automatically be turned into a JSON response.
 
 For endpoints that handle other HTTP methods, like POST, export the corresponding function:
 
 ```js
-export function post(request, context) {...}
+export function post(request) {...}
 ```
 
 Since `delete` is a reserved word in JavaScript, DELETE requests are handled with a `del` function.
@@ -109,13 +105,13 @@ Since `delete` is a reserved word in JavaScript, DELETE requests are handled wit
 >
 > The `body` property of the request object exists in the case of POST requests. If you're posting form data, it will be a read-only version of the [`FormData`](https://developer.mozilla.org/en-US/docs/Web/API/FormData) object.
 
-
 ### Private modules
 
 A filename that has a segment with a leading underscore, such as `src/routes/foo/_Private.svelte` or `src/routes/bar/_utils/cool-util.js`, is hidden from the router, but can be imported by files that are not.
 
-
 ### Advanced
+
+#### Rest parameters
 
 A route can have multiple dynamic parameters, for example `src/routes/[category]/[item].svelte` or even `src/routes/[category]-[item].svelte`. If the number of route segments is unknown, you can use rest syntax — for example you might implement GitHub's file viewer like so...
 
@@ -130,16 +126,21 @@ A route can have multiple dynamic parameters, for example `src/routes/[category]
 	org: 'sveltejs',
 	repo: 'kit',
 	branch: 'master',
-	file: ['documentation', 'docs', '01-routing.md']
+	file: 'documentation/docs/01-routing.md'
 }
 ```
 
-Finally, you can use a subset of regular expression syntax to control whether routes match or not:
+#### Fallthrough routes
+
+Finally, if you have multiple routes that match a given path, SvelteKit will try each of them until one responds. For example if you have these routes...
 
 ```bash
-# matches /2021/04/25 but not /a/b/c or /1/2/3
-src/routes/[year(\d{4})]/[month(\d{2})]/[day(\d{2})].svelte
+src/routes/[baz].js
+src/routes/[baz].svelte
+src/routes/[qux].svelte
+src/routes/foo-[bar].svelte
 ```
 
-Because of technical limitations, the following characters cannot be used: `/`, `\`, `?`, `:`, `(` and `)`.
+...and you navigate to `/foo-xyz`, then SvelteKit will first try `foo-[bar].svelte` because it is the best match, then will try `[baz].js` (which is also a valid match for `/foo-xyz`, but less specific), then `[baz].svelte` and `[qux].svelte` in alphabetical order (endpoints have higher precedence than pages). The first route that responds — a page that returns something from [`load`](#loading) or has no `load` function, or an endpoint that returns something — will handle the request.
 
+If no page or endpoint responds to a request, SvelteKit will respond with a generic 404.

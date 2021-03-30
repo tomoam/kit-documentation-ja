@@ -7,33 +7,32 @@ A component that defines a page can export a `load` function that runs before th
 Our example blog page might contain a `load` function like the following. Note the `context="module"` — this is necessary because `load` runs before the component is rendered:
 
 ```ts
-type LoadOptions = {
+type LoadInput = {
 	page: {
 		host: string;
 		path: string;
 		params: Record<string, string | string[]>;
 		query: URLSearchParams;
 	};
-	fetch: (url: string, opts?: {...}) => Promise<Response>
+	fetch: (info: RequestInfo, init?: RequestInit) => Promise<Response>;
 	session: any;
 	context: Record<string, any>;
 };
 
-type Loaded = {
+type LoadOutput = {
 	status?: number;
-	error?: Error | string;
+	error?: Error;
 	redirect?: string;
-	maxage?: number;
 	props?: Record<string, any>;
 	context?: Record<string, any>;
+	maxage?: number;
 };
 ```
 
 ```html
 <script context="module">
 	/**
-	 * @param {import('@sveltejs/kit).LoadOptions} options
-	 * @returns {import('@sveltejs/kit').Loaded}
+	 * @type {import('@sveltejs/kit').Load}
 	 */
 	export async function load({ page, fetch, session, context }) {
 		const url = `/blog/${page.params.slug}.json`;
@@ -57,11 +56,13 @@ type Loaded = {
 
 `load` is the SvelteKit equivalent of `getStaticProps` or `getServerSideProps` in Next.js or `asyncData` in Nuxt.js.
 
+If `load` returns nothing, SvelteKit will [fall through](#routing-advanced-fallthrough-routes) to other routes until something responds, or will respond with a generic 404.
+
 > `load` only applies to components that define pages, not the components that they import.
 
 ### Input
 
-The `load` function receives an object containing four fields —  `page`, `fetch`, `session` and `context`.
+The `load` function receives an object containing four fields — `page`, `fetch`, `session` and `context`.
 
 #### page
 
@@ -82,7 +83,7 @@ So if the example above was `src/routes/blog/[slug].svelte` and the URL was `/bl
 
 #### session
 
-`session` can be used to pass data from the server related to the current request, e.g. the current user. By default it is `undefined`. See [Setup](#setup) to learn how to use it.
+`session` can be used to pass data from the server related to the current request, e.g. the current user. By default it is `undefined`. See [`getSession`](#hooks-getsession) to learn how to use it.
 
 #### context
 
